@@ -2,6 +2,20 @@ const fs = require('fs');
 const jwt = require('jsonwebtoken'); //用户登录加密
 const tableData = require('./data/creativeData.js')
 
+// 上传图片的插件
+const multer = require('multer')
+let storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, './uploads')
+    },
+    filename: function(req, file, cb) {
+        let filename = file.originalname.split('.')
+        cb(null, filename[0] + '-' + Date.now() + '.' + filename[1])
+    }
+})
+
+let upload = multer({ storage: storage })
+
 
 // console.log(aa, 'aa')
 

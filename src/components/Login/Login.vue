@@ -3,14 +3,14 @@
         <el-tabs type="border-card">
             <el-tab-pane label="快速登录">
                 <el-form status-icon label-width="100px" class="demo-ruleForm">
-                    <el-form-item label="用户名" >
-                        <el-input type="text" v-model="username"></el-input>
+                    <el-form-item label="用户名" prop="username" :rules="userRules">
+                        <el-input v-model="formData.username"></el-input>
                     </el-form-item>
-                    <el-form-item label="密码" prop="password">
-                        <el-input type="password" v-model='password' auto-complete="off"></el-input>
+                    <el-form-item label="密码" prop="password" :rules="passRules">
+                        <el-input v-model="formData.password"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="login">登录</el-button>
+                        <el-button ><span v-on:click.native="login">登录</span></el-button>
                         <el-button @click="register">重置</el-button>
                         <el-button @click="register">注册</el-button>
                     </el-form-item>
@@ -34,78 +34,106 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import {login} from '../../utils/request'
+import Vue from "vue";
+import { login } from "../../utils/request";
 
 export default {
-    data() {
-      return{
-          username:'',
-          password:''
-      }
-    },
-    methods: {
-        login() {
-            login(this.username,this.password,'1314').then(res=>{
-                localStorage.setItem('username',res.userInfo.username)
-                localStorage.setItem('userid',res.userInfo.id)
-                // localStorage.setItem('password',res.userInfo.id)
-                if(!res.code){this.$router.push('/index/home')}
-            })
+  data() {
+    return {
+      formData: {
+        username: "1066180755@qq.com",
+        password: "123456"
       },
-      register() {
-        // this.$refs[formName].resetFields();
-      }
+      userRules: [
+        {
+          required: true,
+          message: "用户名不可省略"
+        },
+        {
+          type: "email",
+          message: "请输入正确格式的email"
+        }
+      ],
+      passRules: [
+        {
+          //validator:()=>{},
+          required: true,
+          message: "密码不可省略"
+        }
+      ]
+    };
+  },
+  methods: {
+    login() {
+      console.log('login-------')
+      this.$refs.loginBox.validate((isValid,options)=>{
+        if(isValid){
+          this.$store.dispatch('getToken',{
+            data:this.formData,
+            notify:this.$notify,
+            router:this.$router
+          })
+        }else{
+
+          this.$notify({
+            title: '错误',
+            message: '请填写正确的用户名和密码',
+            type: 'warning'
+          })
+        }
+        
+      })
     },
-    beforeRouteEnter(to,from,next){
-        next(vm=>{
-            let username=localStorage.getItem('username');
-            let userid=localStorage.getItem('userid');
-            if(username!==''){
-                // Vue.set(vm.data,'username',username)
-            }
-            console.log(username,userid,'before router enter')
-        })
+    register() {
+      // this.$refs[formName].resetFields();
     }
-}
+  },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      let username = localStorage.getItem("username");
+      let userid = localStorage.getItem("userid");
+      if (username !== "") {
+        // Vue.set(vm.data,'username',username)
+      }
+      console.log(username, userid, "before router enter");
+    });
+  }
+};
 </script>
 
 <style>
-
 .login {
   width: 100%;
   height: 100%;
-  background: url('../../assets/bg.png')  no-repeat;
+  background: url("../../assets/bg.png") no-repeat;
   background-size: 100% 100%;
   position: relative;
-
 }
-.el-tabs--border-card{
-    width:500px;
-    height:400px;
-    position: absolute;
-    top:0;
-    bottom:0;
-    left:0;
-    right:0;
-    margin:auto;
+.el-tabs--border-card {
+  width: 500px;
+  height: 400px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
 }
-.el-form{
-    width:80%;
-    height:50%;
-    margin:0 auto;
+.el-form {
+  width: 80%;
+  height: 50%;
+  margin: 0 auto;
 }
-.el-tabs__nav{
-    width:60%;
-    margin:0 auto;
-    float:none;
+.el-tabs__nav {
+  width: 60%;
+  margin: 0 auto;
+  float: none;
 }
 .el-tabs__item {
-    width: 50%;
-    text-align: center
+  width: 50%;
+  text-align: center;
 }
-.el-tabs--border-card>.el-tabs__content{
-    padding:50px 50px 50px 20px;
+.el-tabs--border-card > .el-tabs__content {
+  padding: 50px 50px 50px 20px;
 }
-
 </style>
