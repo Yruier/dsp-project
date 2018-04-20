@@ -2,15 +2,15 @@
     <div class='login'>
         <el-tabs type="border-card">
             <el-tab-pane label="快速登录">
-                <el-form status-icon label-width="100px" class="demo-ruleForm">
-                    <el-form-item label="用户名" prop="username" :rules="userRules">
+                <el-form status-icon label-width="100px" class="demo-ruleForm" :model="formData" ref='loginBox'>
+                    <el-form-item label="用户名" prop="username" :rules="userRules" >
                         <el-input v-model="formData.username"></el-input>
                     </el-form-item>
                     <el-form-item label="密码" prop="password" :rules="passRules">
                         <el-input v-model="formData.password"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button ><span v-on:click.native="login">登录</span></el-button>
+                        <el-button @click="login">登录</el-button>
                         <el-button @click="register">重置</el-button>
                         <el-button @click="register">注册</el-button>
                     </el-form-item>
@@ -41,7 +41,7 @@ export default {
   data() {
     return {
       formData: {
-        username: "1066180755@qq.com",
+        username: "13140001052@163.com",
         password: "123456"
       },
       userRules: [
@@ -56,7 +56,6 @@ export default {
       ],
       passRules: [
         {
-          //validator:()=>{},
           required: true,
           message: "密码不可省略"
         }
@@ -64,9 +63,10 @@ export default {
     };
   },
   methods: {
+
     login() {
-      console.log('login-------')
       this.$refs.loginBox.validate((isValid,options)=>{
+          console.log(isValid,options,'isValid,options')
         if(isValid){
           this.$store.dispatch('getToken',{
             data:this.formData,
@@ -74,15 +74,14 @@ export default {
             router:this.$router
           })
         }else{
-
           this.$notify({
             title: '错误',
             message: '请填写正确的用户名和密码',
             type: 'warning'
           })
         }
-        
       })
+
     },
     register() {
       // this.$refs[formName].resetFields();

@@ -65,8 +65,8 @@
         data() {
             return {
                 isCollapse: true,
-                username:'000',
-                userid:'000'
+                username:'',
+                userid:''
             };
         },
         methods: {
@@ -74,30 +74,27 @@
                 this.$router.push('/index/plan')
             },
             exit(){
-                localStorage.setItem('username','')
-                localStorage.setItem('userid','')
-                this.$router.push('/login')
                 
                 this.$alert('确定退出当前账号吗', '退出登录', {
                 confirmButtonText: '确定',
                 callback: action => {
-                    console.log(action,'action')
-                    this.$message({
-                        type: 'info',
-                        message: `action: ${ action }`
-                    });
-                }
+                    localStorage.setItem('username','')
+                    localStorage.setItem('userid','')
+                    this.$router.push('/login')
+                        this.$message({
+                            type: 'info',
+                            message: `action: 已退出当前账号`
+                        });
+                    }
                 })
             }
         },
-        beforeRouteEnter (to, from, next) {
-            next(vm => {
-                let username = localStorage.getItem('username');
-                let userid = localStorage.getItem('userid')
-                // 通过 `vm` 访问组件实例
-                vm.username = username;
-                vm.userid = userid;
-            })
+        created(){
+            let username = localStorage.getItem('username');
+            let userid = localStorage.getItem('userid');
+
+            this.username = username;
+            this.userid = userid;
         }
     }
 </script>

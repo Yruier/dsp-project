@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-upload
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="http://localhost:8090/dsp-creative/creative/upload"
             list-type="picture-card"
             :on-preview="handlePictureCardPreview"
             :on-remove="handleRemove">
@@ -28,6 +28,7 @@
         },
         methods: {
             handleRemove(file, fileList) {
+                this.imageUrl = "http://localhost:8090/" + res.data.value;
                 console.log(file, fileList);
             },
             handlePictureCardPreview(file) {

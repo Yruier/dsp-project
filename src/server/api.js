@@ -23,12 +23,13 @@ module.exports = function(app) {
 
     // 登录页面接口 
     app.post('/dsp-admin/user/login', (req, res) => {
-        console.log(req.body)
+        // console.log(req.body)
         fs.readFile('./data/user.json', { encoding: 'utf-8' }, (err, userInfo) => {
             if (err) { throw err; }
             let login = {
                 code: 1,
                 message: 'login faild',
+                username: '',
                 token: ''
             };
             userInfo = JSON.parse(userInfo)
@@ -42,7 +43,7 @@ module.exports = function(app) {
                         }),
                         userInfo: {
                             username: req.body.username,
-                            id: item.id,
+                            userid: item.userid,
                             time: new Date().getTime()
                         }
                     }
